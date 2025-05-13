@@ -40,15 +40,26 @@ public class CategoryServiceImpl implements CategoryService  {
 
 
 		
-		category.setIsDeleted(false);
-		category.setCreatedBy(1);
-		category.setCreatedOn(new Date());
+//		category.setIsDeleted(false);
+//		category.setCreatedBy(1);
+//		category.setCreatedOn(new Date());
+		
+		if (ObjectUtils.isEmpty(category.getId())) {
+			category.setIsDeleted(false);
+			category.setCreatedBy(1);
+			category.setCreatedOn(new Date());
+		} else {
+			updateCategory(category);
+		}
+		
 		Category saveCategory = categoryRepo.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
 		}
 		return true;
 	}
+
+	
 
 	@Override
 	public List<CategoryDto> getAllCategory() {
@@ -58,6 +69,8 @@ public class CategoryServiceImpl implements CategoryService  {
 		
 		return categoryDtoList;
 	}
+	
+	
 
 	@Override
 	public List<CategoryReponse> getActiveCategory() {
@@ -70,6 +83,8 @@ public class CategoryServiceImpl implements CategoryService  {
 		return categoryList;
 	
 	}
+	
+	
 
 	@Override
 	public CategoryDto getCategoryById(Integer id) {
@@ -83,6 +98,9 @@ public class CategoryServiceImpl implements CategoryService  {
 		}
 		return null;
 	}
+	
+	
+	
 
 	@Override
 	public Boolean deleteCategory(Integer id) {
@@ -95,6 +113,23 @@ public class CategoryServiceImpl implements CategoryService  {
 			return true;
 		}
 		return false;
+	}
+	
+	//***************created methode *********************************
+	private void updateCategory(Category category) {
+		Optional<Category> findById = categoryRepo.findById(category.getId());
+		if (findById.isPresent()) {
+			Category existCategory = findById.get();
+			
+			category.setCreatedBy(existCategory.getCreatedBy());
+			category.setCreatedOn(existCategory.getCreatedOn());
+			category.setIsDeleted(existCategory.getIsDeleted());
+			
+			category.setUpdatedBy(1);
+			category.setUpdatedOn(new Date());
+		}
+		
+		
 	}
 	
 	
