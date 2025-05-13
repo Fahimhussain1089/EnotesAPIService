@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hussain.dto.CategoryDto;
+import com.hussain.dto.CategoryReponse;
 import com.hussain.entity.Category;
 import com.hussain.service.CategoryService;
 
@@ -24,10 +26,21 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
 
-	@PostMapping("/save-category")
-	public ResponseEntity<?> saveCategory(@RequestBody Category category) {
+//	@PostMapping("/save-category")
+//	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
+//
+//		Boolean saveCategory = categoryService.saveCategory(categoryDto);
+//		if (saveCategory) {
+//			return new ResponseEntity<>("saved success", HttpStatus.CREATED);
+//		} else {
+//			return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
+	
+	@PostMapping("/save")
+	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
 
-		Boolean saveCategory = categoryService.saveCategory(category);
+		Boolean saveCategory = categoryService.saveCategory(categoryDto);
 		if (saveCategory) {
 			return new ResponseEntity<>("saved success", HttpStatus.CREATED);
 		} else {
@@ -38,13 +51,24 @@ public class CategoryController {
 	@GetMapping("/category")
 	public ResponseEntity<?> getAllCategory() {
 
-		List<Category> allCategory = categoryService.getAllCategory();
+		List<CategoryDto> allCategory = categoryService.getAllCategory();
 		if (CollectionUtils.isEmpty(allCategory)) {
 			return ResponseEntity.noContent().build();
 		} else {
 			return new ResponseEntity<>(allCategory, HttpStatus.OK);
 		}
 
+	}
+	
+	@GetMapping("/active")
+	public ResponseEntity<?> getActiveCategory() {
+
+		List<CategoryReponse> allCategory = categoryService.getActiveCategory();
+		if (CollectionUtils.isEmpty(allCategory)) {
+			return ResponseEntity.noContent().build();
+		} else {
+			return new ResponseEntity<>(allCategory, HttpStatus.OK);
+		}
 	}
 	
 	

@@ -1,32 +1,21 @@
-package com.hussain.entity;
+package com.hussain.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Category extends BaseModel {
+public class CategoryReponse {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	private String name;
 
 	private String description;
-	
-	
-	
 
 	public Integer getId() {
 		return id;
@@ -52,18 +41,17 @@ public class Category extends BaseModel {
 		this.description = description;
 	}
 
-	public Category(Integer id, String name, String description) {
+	public CategoryReponse(Integer id, String name, String description) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 	}
 
-	public Category() {
+	public CategoryReponse() {
 		super();
 	}
 	
 	
-	
-	
+
 }

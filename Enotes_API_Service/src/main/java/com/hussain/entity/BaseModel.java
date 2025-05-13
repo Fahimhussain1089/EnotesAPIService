@@ -6,11 +6,6 @@ import lombok.Setter;
 import java.util.Date;
 
 
-//public class BaseModel {
-//
-//}
-
-
 @Getter
 @Setter
 @MappedSuperclass
