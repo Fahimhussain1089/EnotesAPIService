@@ -12,12 +12,18 @@ import org.springframework.util.ObjectUtils;
 import com.hussain.dto.CategoryDto;
 import com.hussain.dto.CategoryReponse;
 import com.hussain.entity.Category;
+import com.hussain.exception.ExistDataException;
+import com.hussain.exception.ResourceNotFoundException;
 import com.hussain.repo.CategoryRepository;
 import com.hussain.service.CategoryService;
+import com.hussain.util.Validation;
 
 
 @Service
 public class CategoryServiceImpl implements CategoryService  {
+	
+	@Autowired
+    private final Validation validation;
 	
 	
 	@Autowired
@@ -27,31 +33,39 @@ public class CategoryServiceImpl implements CategoryService  {
 	@Autowired
 	private ModelMapper mapper;
 
-	
-	
+
+    CategoryServiceImpl(Validation validation) {
+        this.validation = validation;
+    }
+    
+    
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
-		//Category category =  new Category();
-//		category.setName(categoryDto.getName());
-//		category.setDescription(categoryDto.getDescription());
-//		category.setIsActive(categoryDto.getIsActive());
-		
-		Category category = mapper.map(categoryDto, Category.class); //categoryDto == category ka parametter ki speeling same ho hona chahiye 
 
+		// Validation Checking
+		validation.categoryValidation(categoryDto);
+		// check category exist or not
+		
+		
+		// check category exist or not
+		Boolean exist = categoryRepo.existsByName(categoryDto.getName().trim());
+			if (exist) {
+			// throw error
+				throw new ExistDataException("Category already exist");
+			}
+		
+		
 
-		
-//		category.setIsDeleted(false);
-//		category.setCreatedBy(1);
-//		category.setCreatedOn(new Date());
-		
+		Category category = mapper.map(categoryDto, Category.class);
+
 		if (ObjectUtils.isEmpty(category.getId())) {
 			category.setIsDeleted(false);
-			category.setCreatedBy(1);
+			//category.setCreatedBy(1);//becasue weve created the abstract class 
 			category.setCreatedOn(new Date());
 		} else {
 			updateCategory(category);
 		}
-		
+
 		Category saveCategory = categoryRepo.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
@@ -86,14 +100,28 @@ public class CategoryServiceImpl implements CategoryService  {
 	
 	
 
+//	@Override
+//	public CategoryDto getCategoryById(Integer id) {
+//	
+//		Optional<Category> findByCatgeory = categoryRepo.findByIdAndIsDeletedFalse(id);
+//		if (findByCatgeory.isPresent()) {
+//			Category category = findByCatgeory.get();
+//			return mapper.map(category, CategoryDto.class);
+//		}
+//		return null;
+//		
+//
+//	}
 	@Override
-	public CategoryDto getCategoryById(Integer id) {
-
-		Optional<Category> findByCatgeory = categoryRepo.findByIdAndIsDeletedFalse(id);
+	public CategoryDto getCategoryById(Integer id) throws Exception {
 		
+	
 
-		if (findByCatgeory.isPresent()) {
-			Category category = findByCatgeory.get();
+		Category category = categoryRepo.findByIdAndIsDeletedFalse(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Category not found with id=" + id));
+
+		if (!ObjectUtils.isEmpty(category)) {
+			category.getName().toUpperCase();
 			return mapper.map(category, CategoryDto.class);
 		}
 		return null;
@@ -125,8 +153,8 @@ public class CategoryServiceImpl implements CategoryService  {
 			category.setCreatedOn(existCategory.getCreatedOn());
 			category.setIsDeleted(existCategory.getIsDeleted());
 			
-			category.setUpdatedBy(1);
-			category.setUpdatedOn(new Date());
+//			category.setUpdatedBy(1);
+//			category.setUpdatedOn(new Date());// becasue weve created the abstract class 
 		}
 		
 		
