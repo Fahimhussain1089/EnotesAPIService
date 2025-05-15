@@ -1,6 +1,9 @@
 package com.hussain.entity;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Category extends BaseModel {
 
 	@Id
@@ -24,6 +28,10 @@ public class Category extends BaseModel {
 	private String name;
 
 	private String description;
+	
+	private Boolean isActive;
+
+	private Boolean isDeleted;
 	
 	
 	
@@ -47,16 +55,40 @@ public class Category extends BaseModel {
 	public String getDescription() {
 		return description;
 	}
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public Category(Integer id, String name, String description) {
+	public Category(
+			Boolean isActive,
+			Boolean isDeleted,
+			Integer id,
+			String name,
+			String description
+			) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		
+		this.isActive = isActive;
+		this.isDeleted = isDeleted;
 	}
 
 	public Category() {
