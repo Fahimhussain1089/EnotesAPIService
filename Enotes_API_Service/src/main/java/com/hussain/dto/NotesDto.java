@@ -1,5 +1,6 @@
 package com.hussain.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -39,11 +40,60 @@ public class NotesDto {
 	private Date updatedOn;
 	
 	private FilesDto fileDetails;
+	
+	private Boolean isDeleted;
+
+	private LocalDateTime deletedOn;
+	
+	
+	public NotesDto(Integer id, String title, String description, CategoryDto category, Integer createdBy,
+			Date createdOn, Integer updatedBy, Date updatedOn,FilesDto fileDetails,Boolean isDeleted,LocalDateTime deletedOn) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.category = category;
+		this.createdBy = createdBy;
+		this.createdOn = createdOn;
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
+		this.fileDetails =  fileDetails;
+		this.isDeleted = isDeleted;
+		this.deletedOn = deletedOn;
+	}
+	
+	public NotesDto() {
+		super();
+	}
 
 	
 	
 	
 	
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+
+
+	public LocalDateTime getDeletedOn() {
+		return deletedOn;
+	}
+
+
+
+	public void setDeletedOn(LocalDateTime deletedOn) {
+		this.deletedOn = deletedOn;
+	}
+
+
 
 	public Integer getId() {
 		return id;
@@ -152,27 +202,7 @@ public class NotesDto {
 	
 	
 	
-	public NotesDto(Integer id, String title, String description, CategoryDto category, Integer createdBy,
-			Date createdOn, Integer updatedBy, Date updatedOn,FilesDto fileDetails) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.category = category;
-		this.createdBy = createdBy;
-		this.createdOn = createdOn;
-		this.updatedBy = updatedBy;
-		this.updatedOn = updatedOn;
-		this.fileDetails =  fileDetails;
-	}
 	
-
-
-
-
-	public NotesDto() {
-		super();
-	}
 
 
 
