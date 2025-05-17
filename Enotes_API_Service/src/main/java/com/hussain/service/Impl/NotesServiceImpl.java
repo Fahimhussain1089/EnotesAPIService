@@ -345,6 +345,8 @@ public class NotesServiceImpl implements NotesService {
 
 //		Notes copyNote = Notes.builder().title(notes.getTitle()).description(notes.getDescription())
 //				.category(notes.getCategory()).isDeleted(false).fileDetails(null).build();
+		
+		
 		Notes copyNote = new Notes();
 		copyNote.setTitle(notes.getTitle());
 		copyNote.setDescription(notes.getDescription());

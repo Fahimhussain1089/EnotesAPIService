@@ -4,6 +4,10 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import com.hussain.dto.CategoryDto;
+import com.hussain.dto.TodoDto;
+import com.hussain.dto.TodoDto.StatusDto;
+import com.hussain.enums.TodoStatus;
+import com.hussain.exception.ResourceNotFoundException;
 import com.hussain.exception.ValidationException;
 
 
@@ -49,6 +53,23 @@ public class Validation {
 
 		if (!error.isEmpty()) {
 			throw new ValidationException(error);
+		}
+		
+		
+		
+
+	}
+	
+	public void todoValidation(TodoDto todo) throws Exception {
+		StatusDto reqStatus = todo.getStatus();
+		Boolean statusFound = false;
+		for (TodoStatus st : TodoStatus.values()) {
+			if (st.getId().equals(reqStatus.getId())) {
+				statusFound = true;
+			}
+		}
+		if (!statusFound) {
+			throw new ResourceNotFoundException("invalid status");
 		}
 
 	}
