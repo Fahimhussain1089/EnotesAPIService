@@ -1,11 +1,13 @@
 package com.hussain.exception;
 import java.io.FileNotFoundException;
+import java.nio.file.AccessDeniedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -32,6 +34,12 @@ public class GlobalExceptionHandler {
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e) {
+		log.error("GlobalExceptionHandler :: handleException ::", e.getMessage());
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.FORBIDDEN);
+	}
+
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(Exception e) {
@@ -66,6 +74,17 @@ public class GlobalExceptionHandler {
 //		return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
 		return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+		log.error("GlobalExceptionHandler :: handleException ::", e.getMessage());
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
+		return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
 
 
 }

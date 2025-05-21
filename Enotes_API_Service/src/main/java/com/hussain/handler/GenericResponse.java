@@ -33,6 +33,12 @@ public class GenericResponse {
 	private String message; // saved success
 
 	private Object data; // data
+	
+	
+	  // Add this static method to expose the builder
+    public static Builder builder() {
+        return new Builder();
+    }
 
 	public ResponseEntity<?> create() {
 		Map<String, Object> map = new LinkedHashMap<>();

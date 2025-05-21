@@ -19,6 +19,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,12 +41,15 @@ import com.hussain.dto.NotesResponse;
 import com.hussain.entity.Category;
 import com.hussain.entity.FavouriteNote;
 import com.hussain.entity.Notes;
+import com.hussain.exception.GlobalExceptionHandler;
 import com.hussain.exception.ResourceNotFoundException;
 import com.hussain.repo.CategoryRepository;
 import com.hussain.repo.FavouriteNoteRepository;
 import com.hussain.repo.FileRepository;
 import com.hussain.repo.NotesRepository;
 import com.hussain.service.NotesService;
+import com.hussain.util.CommonUtil;
+
 import org.apache.commons.io.FilenameUtils;
 import com.hussain.entity.FileDetails;
 
@@ -74,6 +79,11 @@ public class NotesServiceImpl implements NotesService {
 	
 	
 	
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+	
+	
+	
 
 	@Override
 	public Boolean saveNotes(String notes, MultipartFile file) throws Exception {
@@ -90,10 +100,14 @@ public class NotesServiceImpl implements NotesService {
 		checkCategoryExist(notesDto.getCategory());
 
 		Notes notesMap = mapper.map(notesDto, Notes.class);
+		log.error("check waht is the notesDto \n :: notesDto ::",notesDto);
+		log.info("Logged-in user notesMap : {}", notesMap);
 		
 		
 
 		FileDetails fileDtls = saveFileDetails(file);
+		log.info("fileDtls is here :: \n ", fileDtls);
+
 
 		if (!ObjectUtils.isEmpty(fileDtls)) {
 			notesMap.setFileDetails(fileDtls);
@@ -105,6 +119,8 @@ public class NotesServiceImpl implements NotesService {
 		}
 
 		Notes saveNotes = notesRepo.save(notesMap);
+		log.info("saveNotes is here :: \n ", saveNotes);
+
 		if (!ObjectUtils.isEmpty(saveNotes)) {
 			return true;
 		}
@@ -200,36 +216,101 @@ public class NotesServiceImpl implements NotesService {
 
 
 
+//	@Override
+//	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize) {
+//		// 10 = 5,5 = 2 pages
+//		Pageable pageable = PageRequest.of(pageNo, pageSize);
+//		Integer userId= CommonUtil.getLoggedInUser().getId();
+//
+//		Page<Notes> pageNotes = notesRepo.findByCreatedBy(userId, pageable);
+//
+//		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+//
+////		NotesResponse notes = NotesResponse.builder()
+////				.notes(notesDto)
+////				.pageNo(pageNotes.getNumber())
+////				.pageSize(pageNotes.getSize())
+////				.totalElements(pageNotes.getTotalElements())
+////				.totalPages(pageNotes.getTotalPages())
+////				.isFirst(pageNotes.isFirst())
+////				.isLast(pageNotes.isLast())
+////				.build();
+//		
+//		 NotesResponse notes = new NotesResponse();
+//		 	notes.setNotes(notesDto);
+//		 	notes.setPageNo(pageNotes.getNumber());
+//		 	notes.setPageSize(pageNotes.getSize());
+//		 	notes.setTotalElements(pageNotes.getTotalElements());
+//		 	notes.setTotalPages(pageNotes.getTotalPages());
+//		 	notes.setIsFirst(pageNotes.isFirst());
+//		 	notes.setIsLast(pageNotes.isLast());
+//
+//		return notes;
+//	}
+	
+//	@Override
+//	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize) {
+//		// 10 = 5,5 = 2 pages
+//		Integer userId = CommonUtil.getLoggedInUser().getId();
+//		Pageable pageable = PageRequest.of(pageNo, pageSize);
+//		Page<Notes> pageNotes = notesRepo.findByCreatedByAndIsDeletedFalse(userId, pageable);
+//
+//		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+//
+//		NotesResponse notes = NotesResponse.builder().notes(notesDto).pageNo(pageNotes.getNumber())
+//				.pageSize(pageNotes.getSize()).totalElements(pageNotes.getTotalElements())
+//				.totalPages(pageNotes.getTotalPages()).isFirst(pageNotes.isFirst()).isLast(pageNotes.isLast()).build();
+//		
+////		 NotesResponse notes = new NotesResponse();
+////		 	notes.setNotes(notesDto);
+////		 	notes.setPageNo(pageNotes.getNumber());
+////		 	notes.setPageSize(pageNotes.getSize());
+////		 	notes.setTotalElements(pageNotes.getTotalElements());
+////		 	notes.setTotalPages(pageNotes.getTotalPages());
+////		 	notes.setIsFirst(pageNotes.isFirst());
+////		 	notes.setIsLast(pageNotes.isLast());
+//			log.error("check what is the store in the log\n :: notes ::",notes);
+//			log.info("Logged-in user ID: {}", userId);
+//			log.info("Logged-in user notesDto : \n", notesDto);
+//			log.info("Query executed. Found {} notes", pageNotes.getTotalElements());
+//
+//
+//
+//		return notes;
+//	}
+	
+	
 	@Override
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
-		// 10 = 5,5 = 2 pages
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		Page<Notes> pageNotes = notesRepo.findByCreatedBy(userId, pageable);
+	public NotesResponse getAllNotesByUser(Integer pageNo, Integer pageSize) {
+	    Integer userId = CommonUtil.getLoggedInUser().getId();
+	    log.info("Fetching notes for user ID: {}", userId);
+	    
+	    Pageable pageable = PageRequest.of(pageNo, pageSize);
+	    Page<Notes> pageNotes = notesRepo.findByCreatedByAndIsDeletedFalse(userId, pageable);
 
-		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+	    List<NotesDto> notesDto = pageNotes.getContent().stream()
+	            .map(n -> mapper.map(n, NotesDto.class))
+	            .toList();
 
-//		NotesResponse notes = NotesResponse.builder()
-//				.notes(notesDto)
-//				.pageNo(pageNotes.getNumber())
-//				.pageSize(pageNotes.getSize())
-//				.totalElements(pageNotes.getTotalElements())
-//				.totalPages(pageNotes.getTotalPages())
-//				.isFirst(pageNotes.isFirst())
-//				.isLast(pageNotes.isLast())
-//				.build();
-		
-		 NotesResponse notes = new NotesResponse();
-		 	notes.setNotes(notesDto);
-		 	notes.setPageNo(pageNotes.getNumber());
-		 	notes.setPageSize(pageNotes.getSize());
-		 	notes.setTotalElements(pageNotes.getTotalElements());
-		 	notes.setTotalPages(pageNotes.getTotalPages());
-		 	notes.setIsFirst(pageNotes.isFirst());
-		 	notes.setIsLast(pageNotes.isLast());
+	    // Debug logging
+	    log.debug("Retrieved {} notes from repository", pageNotes.getNumberOfElements());
+	    notesDto.forEach(note -> log.debug("Note ID: {}, Title: {}", note.getId(), note.getTitle()));
 
-		return notes;
+	    NotesResponse response = NotesResponse.builder()
+	            .notes(notesDto)
+	            .pageNo(pageNotes.getNumber())
+	            .pageSize(pageNotes.getSize())
+	            .totalElements(pageNotes.getTotalElements())
+	            .totalPages(pageNotes.getTotalPages())
+	            .isFirst(pageNotes.isFirst())
+	            .isLast(pageNotes.isLast())
+	            .build();
+
+	    log.info("Constructed response with {} notes (page {} of {})", 
+	            notesDto.size(), pageNo + 1, pageNotes.getTotalPages());
+	    
+	    return response;
 	}
-
 
 
 	//******************************************************************************
@@ -270,7 +351,9 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public List<NotesDto> getUserRecycleBinNotes(Integer userId) {
+	public List<NotesDto> getUserRecycleBinNotes() {
+		Integer userId= CommonUtil.getLoggedInUser().getId();
+
 		List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userId);
 		List<NotesDto> notesDtoList = recycleNotes.stream().map(note -> mapper.map(note, NotesDto.class)).toList();
 		return notesDtoList;
@@ -299,7 +382,9 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public void emptyRecycleBin(int userId) {
+	public void emptyRecycleBin() {
+		Integer userId= CommonUtil.getLoggedInUser().getId();
+
 		List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userId);
 		if (!CollectionUtils.isEmpty(recycleNotes)) {
 			notesRepo.deleteAll(recycleNotes);
@@ -330,7 +415,9 @@ public class NotesServiceImpl implements NotesService {
 
 	@Override
 	public List<FavouriteNoteDto> getUserFavoriteNotes() throws Exception {
-		int userId = 2;
+//		int userId = 2;
+		Integer userId= CommonUtil.getLoggedInUser().getId();
+
 		List<FavouriteNote> favouriteNotes = favouriteNoteRepo.findByUserId(userId);
 		return favouriteNotes.stream().map(fn -> mapper.map(fn, FavouriteNoteDto.class)).toList();
 	}

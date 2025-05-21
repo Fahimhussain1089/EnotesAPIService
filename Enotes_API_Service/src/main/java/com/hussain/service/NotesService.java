@@ -26,19 +26,19 @@ public interface NotesService {
 
 	public FileDetails getFileDetails(Integer id) throws Exception;
 	
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize);
+	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize);//here is change
 	//********************************************************************************************
 	public void softDeleteNotes(Integer id) throws Exception;
 
 	public void restoreNotes(Integer id) throws Exception;
 
-	public List<NotesDto> getUserRecycleBinNotes(Integer userId);
+	public List<NotesDto> getUserRecycleBinNotes();//here is change
 
 	public void hardDeleteNotes(Integer id) throws Exception;
 
-	public void emptyRecycleBin(int userId);
+	public void emptyRecycleBin(); //here is change
 
-	public void favoriteNotes(Integer noteId) throws Exception;
+	public void favoriteNotes(Integer noteId) throws Exception;//here is change
 
 	public void unFavoriteNotes(Integer noteId) throws Exception;
 
