@@ -13,17 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hussain.dto.TodoDto;
+import com.hussain.endpoint.TodoEndpoint;
 import com.hussain.service.TodoService;
 import com.hussain.util.CommonUtil;
 
 @RestController
 @RequestMapping("/api/v1/todo")
-public class TodoController {
+public class TodoController implements TodoEndpoint  {
 
 	@Autowired
 	private TodoService todoService;
 
-	@PostMapping("/")
+//	@PostMapping("/")
+	@Override
 	public ResponseEntity<?> saveTodo(@RequestBody TodoDto todo) throws Exception {
 		Boolean saveTodo = todoService.saveTodo(todo);
 		if (saveTodo) {
@@ -33,19 +35,27 @@ public class TodoController {
 		}
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<?> saveTodo(@PathVariable Integer id) throws Exception {
-		TodoDto todo = todoService.getTodoById(id);
-		return CommonUtil.createBuildResponse(todo, HttpStatus.OK);
-	}
+//	@GetMapping("/{id}")
+//	@Override
+//	public ResponseEntity<?> saveTodo(@PathVariable Integer id) throws Exception {
+//		TodoDto todo = todoService.getTodoById(id);
+//		return CommonUtil.createBuildResponse(todo, HttpStatus.OK);
+//	}
 
-	@GetMapping("/list")
+//	@GetMapping("/list")
+	@Override
 	public ResponseEntity<?> getAllTodoByUser() throws Exception {
 		List<TodoDto> todoList = todoService.getTodoByUser();
 		if (CollectionUtils.isEmpty(todoList)) {
 			return ResponseEntity.noContent().build();
 		}
 		return CommonUtil.createBuildResponse(todoList, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> getTodoById(Integer id) throws Exception {
+		TodoDto todo = todoService.getTodoById(id);
+		return CommonUtil.createBuildResponse(todo, HttpStatus.OK);
 	}
 
 }

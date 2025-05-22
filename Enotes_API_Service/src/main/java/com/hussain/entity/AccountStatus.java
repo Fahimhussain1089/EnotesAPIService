@@ -24,18 +24,22 @@ public class AccountStatus {
 	private Boolean isActive;
 
 	private String verificationCode;
+	private String passwordResetToken;//
 	
 	
 	
+	
+
 	public AccountStatus() {
 		super();
 	}
 
-	public AccountStatus(Integer id, Boolean isActive, String verificationCode) {
+	public AccountStatus(Integer id, Boolean isActive, String verificationCode,String passwordResetToken) {
 		super();
 		this.id = id;
 		this.isActive = isActive;
 		this.verificationCode = verificationCode;
+		this.passwordResetToken = passwordResetToken;
 	}
 
 	public Integer getId() {
@@ -60,6 +64,13 @@ public class AccountStatus {
 
 	public void setVerificationCode(String verificationCode) {
 		this.verificationCode = verificationCode;
+	}
+	public String getPasswordResetToken() {
+		return passwordResetToken;
+	}
+
+	public void setPasswordResetToken(String passwordResetToken) {
+		this.passwordResetToken = passwordResetToken;
 	}
 
 

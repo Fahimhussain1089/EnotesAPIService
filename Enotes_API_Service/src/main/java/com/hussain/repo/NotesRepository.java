@@ -28,6 +28,13 @@ public interface NotesRepository extends JpaRepository<Notes, Integer>{
  //   Page<Notes> findByCreatedByAndIsDeletedFalse(@Param("userId") Integer userId, Pageable pageable);
 
 	List<Notes> findAllByIsDeletedAndDeletedOnBefore(boolean b, LocalDateTime cutOffDate);
+	
+	@Query("select n from Notes n where (Lower(n.title) like lower(concat('%',:keyword,'%')) "
+			+ "or lower(n.description) like lower(concat('%',:keyword,'%')) "
+			+ "or lower(n.category.name) like lower(concat('%',:keyword,'%'))) "
+			+ "and n.isDeleted=false "
+			+ "and n.createdBy=:userId")
+	Page<Notes> searchNotes(@Param("keyword") String keyword,@Param("userId")Integer userId,Pageable pageable);
 
 
 }

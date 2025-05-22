@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hussain.dto.LoginRequest;
 import com.hussain.dto.LoginResponse;
 import com.hussain.dto.UserRequest;
+import com.hussain.endpoint.AuthEndpoint;
+import com.hussain.endpoint.HomeEndpoint;
 import com.hussain.service.AuthService;
 import com.hussain.util.CommonUtil;
 
@@ -18,12 +20,13 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthController implements AuthEndpoint{
 
 	@Autowired
 	private AuthService authService;
 
-	@PostMapping("/")
+//	@PostMapping("/")
+	@Override
 	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception {
 		String url=CommonUtil.getUrl(request);
 		Boolean register = authService.register(userDto,url);
@@ -33,7 +36,8 @@ public class AuthController {
 		return CommonUtil.createErrorResponseMessage("Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@PostMapping("/login")
+//	@PostMapping("/login")
+	@Override
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception {
 
 		LoginResponse loginResponse = authService.login(loginRequest);
