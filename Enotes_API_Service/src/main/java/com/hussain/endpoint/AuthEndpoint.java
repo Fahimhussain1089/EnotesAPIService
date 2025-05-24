@@ -22,7 +22,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api/v1/auth")
 public interface AuthEndpoint {
 	
-	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Register Success"),
+	@ApiResponses(value = { 
+			@ApiResponse(responseCode = "201", description = "Register Success"),
 			@ApiResponse(responseCode = "500", description = "Interna Server error"),
 			@ApiResponse(responseCode = "400", description = "Bad Request") })
 	@PostMapping("/register")

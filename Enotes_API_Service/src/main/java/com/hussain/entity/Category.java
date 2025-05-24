@@ -32,6 +32,26 @@ public class Category extends BaseModel {
 	private Boolean isActive;
 
 	private Boolean isDeleted;
+	public Category(
+			Boolean isActive,
+			Boolean isDeleted,
+			Integer id,
+			String name,
+			String description
+			) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		
+		this.isActive = isActive;
+		this.isDeleted = isDeleted;
+	}
+
+	public Category() {
+		super();
+	}
+	
 	
 	
 	
@@ -74,27 +94,56 @@ public class Category extends BaseModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	//*************************************************************
+	 public static class Builder {
+	        private Integer id;
+	        private String name;
+	        private String description;
+	        private Boolean isActive;
+	        private Boolean isDeleted;
 
-	public Category(
-			Boolean isActive,
-			Boolean isDeleted,
-			Integer id,
-			String name,
-			String description
-			) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		
-		this.isActive = isActive;
-		this.isDeleted = isDeleted;
-	}
+	        public Builder id(Integer id) {
+	            this.id = id;
+	            return this;
+	        }
 
-	public Category() {
-		super();
-	}
+	        public Builder name(String name) {
+	            this.name = name;
+	            return this;
+	        }
+
+	        public Builder description(String description) {
+	            this.description = description;
+	            return this;
+	        }
+
+	        public Builder isActive(Boolean isActive) {
+	            this.isActive = isActive;
+	            return this;
+	        }
+
+	        public Builder isDeleted(Boolean isDeleted) {
+	            this.isDeleted = isDeleted;
+	            return this;
+	        }
+
+	        public Category build() {
+	            Category category = new Category();
+	            category.setId(id);
+	            category.setName(name);
+	            category.setDescription(description);
+	            category.setIsActive(isActive);
+	            category.setIsDeleted(isDeleted);
+	            return category;
+	        }
+	    }
+
+	    public static Builder builder() {
+	        return new Builder();
+	    }
 	
+
+
 	
 	
 	
