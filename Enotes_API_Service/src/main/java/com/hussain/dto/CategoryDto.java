@@ -34,6 +34,26 @@ public class CategoryDto {
 	private Integer updatedBy;
 
 	private Date updatedOn;
+	
+	public CategoryDto() {
+		super();
+	}
+	
+	
+	
+	
+	public CategoryDto(Integer id, String name, String description, Boolean isActive, Integer createdBy, Date createdOn,
+			Integer updatedBy, Date updatedOn) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.isActive = isActive;
+		this.createdBy = createdBy;
+		this.createdOn = createdOn;
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
+	}
 
 	public Integer getId() {
 		return id;
@@ -98,24 +118,82 @@ public class CategoryDto {
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
+	//*************************************************************
+	 
 
-	public CategoryDto() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	    // Manual builder implementation
+	    public static Builder builder() {
+	        return new Builder();
+	    }
 
-	public CategoryDto(Integer id, String name, String description, Boolean isActive, Integer createdBy, Date createdOn,
-			Integer updatedBy, Date updatedOn) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.isActive = isActive;
-		this.createdBy = createdBy;
-		this.createdOn = createdOn;
-		this.updatedBy = updatedBy;
-		this.updatedOn = updatedOn;
-	}
+	    // Builder class
+	    public static class Builder {
+	        private Integer id;
+	        private String name;
+	        private String description;
+	        private Boolean isActive;
+	        private Integer createdBy;
+	        private Date createdOn;
+	        private Integer updatedBy;
+	        private Date updatedOn;
+
+	        public Builder id(Integer id) {
+	            this.id = id;
+	            return this;
+	        }
+
+	        public Builder name(String name) {
+	            this.name = name;
+	            return this;
+	        }
+
+	        public Builder description(String description) {
+	            this.description = description;
+	            return this;
+	        }
+
+	        public Builder isActive(Boolean isActive) {
+	            this.isActive = isActive;
+	            return this;
+	        }
+
+	        public Builder createdBy(Integer createdBy) {
+	            this.createdBy = createdBy;
+	            return this;
+	        }
+
+	        public Builder createdOn(Date createdOn) {
+	            this.createdOn = createdOn;
+	            return this;
+	        }
+
+	        public Builder updatedBy(Integer updatedBy) {
+	            this.updatedBy = updatedBy;
+	            return this;
+	        }
+
+	        public Builder updatedOn(Date updatedOn) {
+	            this.updatedOn = updatedOn;
+	            return this;
+	        }
+
+	        public CategoryDto build() {
+	            CategoryDto dto = new CategoryDto();
+	            dto.id = this.id;
+	            dto.name = this.name;
+	            dto.description = this.description;
+	            dto.isActive = this.isActive;
+	            dto.createdBy = this.createdBy;
+	            dto.createdOn = this.createdOn;
+	            dto.updatedBy = this.updatedBy;
+	            dto.updatedOn = this.updatedOn;
+	            return dto;
+	        }
+	    }
+
+	
+
+	
 	
 	
 	

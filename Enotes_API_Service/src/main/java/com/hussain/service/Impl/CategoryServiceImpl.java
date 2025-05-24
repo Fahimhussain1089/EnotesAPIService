@@ -16,6 +16,7 @@ import com.hussain.exception.ExistDataException;
 import com.hussain.exception.ResourceNotFoundException;
 import com.hussain.repo.CategoryRepository;
 import com.hussain.service.CategoryService;
+//import com.hussain.service.CategoryServiceTest;
 import com.hussain.util.Validation;
 
 
@@ -37,10 +38,21 @@ public class CategoryServiceImpl implements CategoryService  {
     CategoryServiceImpl(Validation validation) {
         this.validation = validation;
     }
+    //***********for the junit *****************************************
+    @Autowired // Optional in Spring 4.3+ for single constructor
+    public CategoryServiceImpl(Validation validation, 
+                             CategoryRepository categoryRepo,
+                             ModelMapper mapper) {
+        this.validation = validation;
+        this.categoryRepo = categoryRepo;
+        this.mapper = mapper;
+    }
+    //**************for the junit ******************************************
     
     
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
+		
 
 		// Validation Checking
 		validation.categoryValidation(categoryDto);
@@ -50,6 +62,7 @@ public class CategoryServiceImpl implements CategoryService  {
 		// check category exist or not
 		Boolean exist = categoryRepo.existsByName(categoryDto.getName().trim());
 			if (exist) {
+				
 			// throw error
 				throw new ExistDataException("Category already exist");
 			}

@@ -58,7 +58,7 @@ public class SecurityConfig {
 		authorizeHttpRequests(
 				req -> req
 						.requestMatchers("/api/v1/home/**", "/api/v1/auth/**", "/swagger-ui/**",
-								"/v3/api-docs/**", "/enotes-doc/**", "/enotes-api-doc/**")
+								"/v3/api-docs/**", "/enotes-doc/**", "/enotes-api-doc/**","/enotes-api-doc/**","/actuator/**")
 						.permitAll().anyRequest().authenticated())
 				.httpBasic(Customizer.withDefaults())
 				.sessionManagement(session-> //ye pura alag class se aya hai 

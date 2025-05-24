@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hussain.dto.CategoryDto;
 import com.hussain.dto.CategoryReponse;
 import com.hussain.endpoint.CategoryEndpoint;
-//import com.hussain.entity.Category;
+import com.hussain.exception.ExistDataException;
 import com.hussain.service.CategoryService;
+//import com.hussain.entity.Category;
+//import com.hussain.service.CategoryServiceTest;
 import com.hussain.util.CommonUtil;
 
 import jakarta.validation.Valid;
@@ -29,24 +31,43 @@ import jakarta.validation.Valid;
 public class CategoryController implements CategoryEndpoint {
 	
 	
+//	@Autowired
+//	private CategoryServiceTest categoryServiceTest;
+	
 	@Autowired
 	private CategoryService categoryService;
+	
 
 	
 //	@PostMapping("/save")
 //	@PreAuthorize("hasRole('ADMIN')")
+//	@Override
+//	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
+//
+//		Boolean saveCategory = categoryService.saveCategory(categoryDto);
+//		if (saveCategory) {
+//			
+//			return CommonUtil.createBuildResponseMessage("saved success", HttpStatus.CREATED);
+//
+//			//return new ResponseEntity<>("saved success", HttpStatus.CREATED);
+//		} else {
+//			return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
+	
 	@Override
-	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
-
-		Boolean saveCategory = categoryService.saveCategory(categoryDto);
-		if (saveCategory) {
-			
-			return CommonUtil.createBuildResponseMessage("saved success", HttpStatus.CREATED);
-
-			//return new ResponseEntity<>("saved success", HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public ResponseEntity<String> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
+	    try {
+	        Boolean saveCategory = categoryService.saveCategory(categoryDto);
+	        
+	        if (saveCategory) {
+	            return new ResponseEntity<>("saved success", HttpStatus.CREATED);
+	        } else {
+	            return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+	        }
+	    } catch (ExistDataException e) {
+	        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	    }
 	}
 
 //	@GetMapping("/")
